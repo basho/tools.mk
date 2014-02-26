@@ -39,8 +39,10 @@ dialyzer: ${PLT} ${LOCAL_PLT}
 		PLTS=$(PLT); \
 	fi; \
 	if [ -f dialyzer.ignore-warnings ]; then \
-		dialyzer $(DIALYZER_FLAGS) --plts $${PLTS} -c ebin | tee dialyzer_warnings && \
-		[ $$(grep -v done dialyzer_warnings | grep -F -f dialyzer.ignore-warnings -v | wc -l) -eq 0 ]; \
+		dialyzer $(DIALYZER_FLAGS) --plts $${PLTS} -c ebin > dialyzer_warnings ; \
+		egrep -v "^\s*done" dialyzer_warnings | grep -F -f dialyzer.ignore-warnings -v > dialyzer_unhandled_warnings ; \
+		cat dialyzer_unhandled_warnings ; \
+		[ $$(cat dialyzer_unhandled_warnings | wc -l) -eq 0 ] ; \
 	else \
 		dialyzer $(DIALYZER_FLAGS) --plts $${PLTS} -c ebin; \
 	fi
