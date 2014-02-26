@@ -40,7 +40,7 @@ dialyzer: ${PLT} ${LOCAL_PLT}
 	fi; \
 	if [ -f dialyzer.ignore-warnings ]; then \
 		dialyzer $(DIALYZER_FLAGS) --plts $${PLTS} -c ebin > dialyzer_warnings ; \
-		egrep -v "^\s*done" dialyzer_warnings | grep -F -f dialyzer.ignore-warnings -v > dialyzer_unhandled_warnings ; \
+		egrep -v "^\s*(done|Checking|Proceeding)" dialyzer_warnings | grep -F -f dialyzer.ignore-warnings -v > dialyzer_unhandled_warnings ; \
 		cat dialyzer_unhandled_warnings ; \
 		[ $$(cat dialyzer_unhandled_warnings | wc -l) -eq 0 ] ; \
 	else \
