@@ -67,3 +67,8 @@ cleanplt:
 	rm $(PLT)
 	rm $(LOCAL_PLT)
 
+fmt:
+	emacs --script $(PRIV_DIR)/erlfmt.el src/*.erl include/*.hrl
+	emacs --script $(PRIV_DIR)/erlfmt.el test/*.erl
+	emacs --script $(PRIV_DIR)/erlfmt.el riak_test/src/*.erl
+	emacs --script $(PRIV_DIR)/erlfmt.el riak_test/tests/*.erl
