@@ -59,7 +59,7 @@ dialyzer-run:
 #   - Anchor to match the entire line (^entire line$)
 #   - Save in dialyzer_unhandled_warnings
 #   - Output matches for those patterns found in the original warnings
-	@-if [ -f $(LOCAL_PLT) ]; then \
+	@if [ -f $(LOCAL_PLT) ]; then \
 		PLTS="$(PLT) $(LOCAL_PLT)"; \
 	else \
 		PLTS=$(PLT); \
@@ -92,7 +92,7 @@ dialyzer-run:
 		    egrep -f dialyzer_unhandled_warnings dialyzer_warnings ; \
 			found_warnings=1; \
 	    fi; \
-		[ "$$found_warnings" == 1 ] ; \
+		[ "$$found_warnings" != 1 ] ; \
 	else \
 		dialyzer $(DIALYZER_FLAGS) --plts $${PLTS} -c ebin; \
 	fi
