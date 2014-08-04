@@ -1,4 +1,6 @@
 REBAR ?= ./rebar
+REVISION ?= $(shell git rev-parse --short HEAD)
+PROJECT ?= $(shell basename `find src -name "*.app.src"` .app.src)
 
 .PHONY: compile-no-deps test docs xref dialyzer-run dialyzer-quick dialyzer \
 		cleanplt
@@ -8,6 +10,12 @@ compile-no-deps:
 
 test: compile
 	${REBAR} eunit skip_deps=true
+
+upload-docs: docs
+	@if [ "////" = "${BUCKET}//${PROJECT}//${REVISION}" ]; then \
+		echo "Set BUCKET, PROJECT, and REVISION env vars to upload docs"; \
+	        exit 1; fi
+	@cd docs; s3cmd put -P * "s3://${BUCKET}/${PROJECT}/${REVISION}"
 
 docs:
 	${REBAR} doc skip_deps=true
@@ -112,4 +120,3 @@ cleanplt:
 	sleep 5
 	rm $(PLT)
 	rm $(LOCAL_PLT)
-
