@@ -12,7 +12,7 @@ test: compile
 	${REBAR} eunit skip_deps=true
 
 upload-docs: docs
-	@if [ (-z "${BUCKET}") -o (-z "${PROJECT}") -o (-z "${REVISION}") ]; then \
+	@if [ -z "${BUCKET}" -o -z "${PROJECT}" -o -z "${REVISION}" ]; then \
 		echo "Set BUCKET, PROJECT, and REVISION env vars to upload docs"; \
 	        exit 1; fi
 	@cd doc; s3cmd put -P * "s3://${BUCKET}/${PROJECT}/${REVISION}/" > /dev/null
