@@ -3,7 +3,7 @@ REVISION ?= $(shell git rev-parse --short HEAD)
 PROJECT ?= $(shell basename `find src -name "*.app.src"` .app.src)
 
 .PHONY: compile-no-deps test docs xref dialyzer-run dialyzer-quick dialyzer \
-		cleanplt
+		cleanplt upload-docs
 
 compile-no-deps:
 	${REBAR} compile skip_deps=true
