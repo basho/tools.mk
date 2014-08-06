@@ -15,7 +15,8 @@ upload-docs: docs
 	@if [ "////" = "${BUCKET}//${PROJECT}//${REVISION}" ]; then \
 		echo "Set BUCKET, PROJECT, and REVISION env vars to upload docs"; \
 	        exit 1; fi
-	@cd doc; s3cmd put -P * "s3://${BUCKET}/${PROJECT}/${REVISION}/"
+	@cd doc; s3cmd put -P * "s3://${BUCKET}/${PROJECT}/${REVISION}/" > /dev/null
+	@echo "Docs built at: http://${BUCKET}.s3-website-us-east-1.amazonaws.com/${PROJECT}/${REVISION}"
 
 docs:
 	${REBAR} doc skip_deps=true
