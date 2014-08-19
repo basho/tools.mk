@@ -18,6 +18,12 @@
 #
 #  -------------------------------------------------------------------
 
+#  -------------------------------------------------------------------
+#  NOTE: This file is is from https://github.com/basho/tools.mk.
+#  It should not be edited in a project. It should simply be updated
+#  wholesale when a new version of tools.mk is released.
+#  -------------------------------------------------------------------
+
 REBAR ?= ./rebar
 REVISION ?= $(shell git rev-parse --short HEAD)
 PROJECT ?= $(shell basename `find src -name "*.app.src"` .app.src)
