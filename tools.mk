@@ -1,6 +1,6 @@
 #  -------------------------------------------------------------------
 #
-#  Copyright (c) 2014 Basho Technologies, Inc.
+#  Copyright (c) 2014-2016 Basho Technologies, Inc.
 #
 #  This file is provided to you under the Apache License,
 #  Version 2.0 (the "License"); you may not use this file
@@ -24,7 +24,7 @@
 #  wholesale when a new version of tools.mk is released.
 #  -------------------------------------------------------------------
 
-REBAR ?= ./rebar
+REBAR ?= ./rebar3
 REVISION ?= $(shell git rev-parse --short HEAD)
 PROJECT ?= $(shell basename `find src -name "*.app.src"` .app.src)
 
