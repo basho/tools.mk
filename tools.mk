@@ -1,6 +1,6 @@
 #  -------------------------------------------------------------------
 #
-#  Copyright (c) 2014 Basho Technologies, Inc.
+#  Copyright (c) 2014-2016 Basho Technologies, Inc.
 #
 #  This file is provided to you under the Apache License,
 #  Version 2.0 (the "License"); you may not use this file
@@ -27,6 +27,7 @@
 REBAR ?= ./rebar
 REVISION ?= $(shell git rev-parse --short HEAD)
 PROJECT ?= $(shell basename `find src -name "*.app.src"` .app.src)
+REBAR_DEPS_DIR ?= deps
 
 .PHONY: compile-no-deps test docs xref dialyzer-run dialyzer-quick dialyzer \
 		cleanplt upload-docs
@@ -51,7 +52,7 @@ xref: compile
 	${REBAR} xref skip_deps=true
 
 PLT ?= $(HOME)/.combo_dialyzer_plt
-LOCAL_PLT = .local_dialyzer_plt
+LOCAL_PLT ?= .local_dialyzer_plt
 DIALYZER_FLAGS ?= -Wunmatched_returns
 
 ${PLT}: compile
@@ -63,12 +64,12 @@ ${PLT}: compile
 	fi
 
 ${LOCAL_PLT}: compile
-	@if [ -d deps ]; then \
+	@if [ -d $(REBAR_DEPS_DIR) ]; then \
 		if [ -f $(LOCAL_PLT) ]; then \
-			dialyzer --check_plt --plt $(LOCAL_PLT) deps/*/ebin  && \
-			dialyzer --add_to_plt --plt $(LOCAL_PLT) --output_plt $(LOCAL_PLT) deps/*/ebin ; test $$? -ne 1; \
+			dialyzer --check_plt --plt $(LOCAL_PLT) $(REBAR_DEPS_DIR)/*/ebin  && \
+			dialyzer --add_to_plt --plt $(LOCAL_PLT) --output_plt $(LOCAL_PLT) $(REBAR_DEPS_DIR)/*/ebin ; test $$? -ne 1; \
 		else \
-			dialyzer --build_plt --output_plt $(LOCAL_PLT) deps/*/ebin ; test $$? -ne 1; \
+			dialyzer --build_plt --output_plt $(LOCAL_PLT) $(REBAR_DEPS_DIR)/*/ebin ; test $$? -ne 1; \
 		fi \
 	fi
 
