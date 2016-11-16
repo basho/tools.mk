@@ -35,8 +35,13 @@ EUNIT_OPTS ?=
 compile-no-deps:
 	${REBAR} compile skip_deps=true
 
-test: compile
+test: ct eunit
+
+eunit: compile
 	${REBAR} ${EUNIT_OPTS} eunit skip_deps=true
+
+ct: compile
+	${REBAR} ct skip_deps=true
 
 upload-docs: docs
 	@if [ -z "${BUCKET}" -o -z "${PROJECT}" -o -z "${REVISION}" ]; then \
