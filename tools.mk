@@ -28,6 +28,7 @@ REBAR ?= ./rebar
 REVISION ?= $(shell git rev-parse --short HEAD)
 PROJECT ?= $(shell basename `find src -name "*.app.src"` .app.src)
 REBAR_DEPS_DIR ?= deps
+EUNIT_OPTS ?=
 
 ifeq ($(shell uname -s),Linux)
 ESED ?= sed -r
@@ -41,8 +42,13 @@ endif
 compile-no-deps:
 	${REBAR} compile skip_deps=true
 
-test: compile
-	${REBAR} eunit skip_deps=true
+test: ct eunit
+
+eunit: compile
+	${REBAR} ${EUNIT_OPTS} eunit skip_deps=true
+
+ct: compile
+	${REBAR} ct skip_deps=true
 
 upload-docs: docs
 	@if [ -z "${BUCKET}" -o -z "${PROJECT}" -o -z "${REVISION}" ]; then \
