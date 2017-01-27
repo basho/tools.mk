@@ -120,14 +120,14 @@ dialyzer-run:
 			echo "ERROR: dialyzer.ignore-warnings contains a blank/empty line, this will match all messages!"; \
 			exit 1; \
 		fi; \
-		dialyzer $(DIALYZER_FLAGS) --plts $${PLTS} -c ebin > dialyzer_warnings ; \
+		dialyzer $(DIALYZER_FLAGS) --plts $${PLTS} -c ebin | egrep -v "^[[:space:]]*(done|Checking|Proceeding|Compiling)" > dialyzer_warnings ; \
 		cat dialyzer.ignore-warnings \
 		| $(ESED) 's/^([^:]+:)[^:]+:/\1/' \
 		| sort \
 		| uniq -c \
 		| $(ESED) '/.*\.erl: /!s/^[[:space:]]*[0-9]+[[:space:]]*//' \
 		> dialyzer.ignore-warnings.tmp ; \
-		egrep -v "^[[:space:]]*(done|Checking|Proceeding|Compiling)" dialyzer_warnings \
+		cat dialyzer_warnings \
 		| $(ESED) 's/^([^:]+:)[^:]+:/\1/' \
 		| sort \
 		| uniq -c \
@@ -146,6 +146,15 @@ dialyzer-run:
 		[ "$$found_warnings" != 1 ] ; \
 	else \
 		dialyzer $(DIALYZER_FLAGS) --plts $${PLTS} -c ebin; \
+	fi
+
+dialyzer-obsolete-warnings: dialyzer
+        # Doing a grep ... > dialyzer_obsolete_warnings fails because
+        # grep returns a non zero return code on no-match
+	@ cat dialyzer.ignore-warnings | grep -F -f dialyzer_warnings -v \
+		| cat > dialyzer_obsolete_warnings
+	@ if [ $$(cat dialyzer_obsolete_warnings | wc -l) -gt 0 ]; then \
+		cat dialyzer_obsolete_warnings ;\
 	fi
 
 dialyzer-quick: compile-no-deps dialyzer-run
